@@ -7,8 +7,10 @@ interface.
 import numpy as np
 import gymnasium as gym
 from gymnasium import spaces, Env
+from dreamerv3 import embodied
 
 from robosuite.wrappers import Wrapper
+import collections
 
 
 class GymWrapper(Wrapper, gym.Env):
@@ -61,9 +63,14 @@ class GymWrapper(Wrapper, gym.Env):
         self.obs_dim = flat_ob.size
         high = np.inf * np.ones(self.obs_dim)
         low = -high
-        self.observation_space = spaces.Box(low, high)
         low, high = self.env.action_spec
         self.action_space = spaces.Box(low, high)
+
+    @property
+    def observation_space(self):
+        return gym.spaces.Box(0, 255, (64, 64, 3), np.uint8)
+
+    # embodied.Space(np.uint8, self._env.observation_space.shape),\
 
     def _flatten_obs(self, obs_dict, verbose=False):
         """
@@ -83,6 +90,25 @@ class GymWrapper(Wrapper, gym.Env):
                     print("adding key: {}".format(key))
                 ob_lst.append(np.array(obs_dict[key]).flatten())
         return np.concatenate(ob_lst)
+    
+    def _not_flatten_obs(self, obs_dict, verbose=False):
+        """
+        Filters keys of interest out and concatenate the information.
+
+        Args:
+            obs_dict (OrderedDict): ordered dictionary of observations
+            verbose (bool): Whether to print out to console as observation keys are processed
+
+        Returns:
+            np.array: observations flattened into a 1d array
+        """
+        ob_lst = []
+        for key in self.keys:
+            if key in obs_dict:
+                if verbose:
+                    print("adding key: {}".format(key))
+                ob_lst.append(np.array(obs_dict[key]))
+        return np.concatenate(ob_lst)
 
     def reset(self, seed=None, options=None):
         """
@@ -97,7 +123,8 @@ class GymWrapper(Wrapper, gym.Env):
             else:
                 raise TypeError("Seed must be an integer type!")
         ob_dict = self.env.reset()
-        return self._flatten_obs(ob_dict), {}
+        # return ob_dict
+        return self._not_flatten_obs(ob_dict)
 
     def step(self, action):
         """
@@ -116,7 +143,8 @@ class GymWrapper(Wrapper, gym.Env):
                 - (dict) misc information
         """
         ob_dict, reward, terminated, info = self.env.step(action)
-        return self._flatten_obs(ob_dict), reward, terminated, False, info
+        return self._not_flatten_obs(ob_dict), reward, terminated, info
+        # return self._flatten_obs(ob_dict), reward, terminated, False, info
 
     def compute_reward(self, achieved_goal, desired_goal, info):
         """

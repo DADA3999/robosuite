@@ -404,6 +404,10 @@ class MujocoEnv(metaclass=EnvMeta):
             self.viewer.update()
 
         observations = self.viewer._get_observations() if self.viewer_get_obs else self._get_observations()
+        # print(f"observations:{observations}")
+        # print(f"reward:{reward}")
+        # print(f"done:{done}")
+        # print(f"info:{info}")
         return observations, reward, done, info
 
     def _pre_action(self, action, policy_step=False):

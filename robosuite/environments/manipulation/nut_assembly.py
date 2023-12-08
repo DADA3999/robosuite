@@ -506,7 +506,8 @@ class NutAssembly(SingleArmEnv):
             # Define nut related sensors
             for i, nut in enumerate(self.nuts):
                 # Create sensors for this nut
-                using_nut = self.single_object_mode == 0 or self.nut_id == i
+                using_nut = False
+                # using_nut = self.single_object_mode == 0 or self.nut_id == i
                 nut_sensors, nut_sensor_names = self._create_nut_sensors(nut_name=nut.name, modality=modality)
                 sensors += nut_sensors
                 names += nut_sensor_names
@@ -523,8 +524,9 @@ class NutAssembly(SingleArmEnv):
                 sensors.append(nut_id)
                 names.append("nut_id")
                 enableds.append(True)
-                actives.append(True)
-
+                # actives.append(True)
+                actives.append(False)
+                
             # Create observables
             for name, s, enabled, active in zip(names, sensors, enableds, actives):
                 observables[name] = Observable(
