@@ -40,7 +40,7 @@ if __name__ == "__main__":
         args.robots,
         controller_configs=controller_config,
         has_renderer=False,
-        ignore_done=True,
+        ignore_done=False,
         use_camera_obs=True,
         use_object_obs=False,
         camera_names=args.camera,
@@ -53,11 +53,11 @@ if __name__ == "__main__":
     obs = env.reset()
     ndim = env.action_dim
 
-    # camera_mover = CameraMover(
-    #     env=env,
-    #     camera=args.camera,
-    # )
-    # camera_mover.move_camera(direction=[0.0, 0.0, 1.0], scale=1.0)
+    camera_mover = CameraMover(
+        env=env,
+        camera=args.camera,
+    )
+    camera_mover.move_camera(direction=[0.0, 0.0, 5.0], scale=1.0)
 
     # camera_mover.rotate_camera(point=None, axis=[1.0, 0.0, 0.0], angle=20)
     # create a video writer with imageio
