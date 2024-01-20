@@ -68,7 +68,10 @@ class GymWrapper(Wrapper, gym.Env):
 
     @property
     def observation_space(self):
-        return gym.spaces.Box(0, 255, (64, 64, 3), np.uint8)
+        return [
+            gym.spaces.Box(0, 255, (64, 64, 3), np.uint8),
+            gym.spaces.Box(-np.inf, np.inf, (3,), np.float64)
+        ]
 
     # embodied.Space(np.uint8, self._env.observation_space.shape),\
 
@@ -108,7 +111,8 @@ class GymWrapper(Wrapper, gym.Env):
                 if verbose:
                     print("adding key: {}".format(key))
                 ob_lst.append(np.array(obs_dict[key]))
-        return np.concatenate(ob_lst)
+        # return np.concatenate(ob_lst)
+        return ob_lst
 
     def reset(self, seed=None, options=None):
         """

@@ -40,7 +40,7 @@ if __name__ == "__main__":
         args.robots,
         controller_configs=controller_config,
         has_renderer=False,
-        ignore_done=False,
+        ignore_done=True,
         use_camera_obs=True,
         use_object_obs=False,
         camera_names=args.camera,
@@ -53,11 +53,11 @@ if __name__ == "__main__":
     obs = env.reset()
     ndim = env.action_dim
 
-    camera_mover = CameraMover(
-        env=env,
-        camera=args.camera,
-    )
-    camera_mover.move_camera(direction=[0.0, 0.0, 5.0], scale=1.0)
+    # camera_mover = CameraMover(
+    #     env=env,
+    #     camera=args.camera,
+    # )
+    # camera_mover.move_camera(direction=[0.0, 0.0, 1.0], scale=1.0)
 
     # camera_mover.rotate_camera(point=None, axis=[1.0, 0.0, 0.0], angle=20)
     # create a video writer with imageio
@@ -71,10 +71,10 @@ if __name__ == "__main__":
     # action_xyz_seq = np.array([[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]])
     steps_per_action = 150
     frames = []
-    # print(f"{obs}")
     for i, action_xyz in enumerate(action_xyz_seq):
         action = np.zeros(ndim)
         action[0:3] = action_xyz
+        print(obs.keys())
         # odict_keys(['robot0_joint_pos_cos', 'robot0_joint_pos_sin', 'robot0_joint_vel', 'robot0_eef_pos', 'robot0_eef_quat', 'robot0_gripper_qpos', 'robot0_gripper_qvel', 'agentview_image', 'robot0_proprio-state'])
         # print(obs['robot0_eef_pos'])
         # print("\n")
