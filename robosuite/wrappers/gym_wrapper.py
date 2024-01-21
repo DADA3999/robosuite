@@ -70,7 +70,10 @@ class GymWrapper(Wrapper, gym.Env):
     def observation_space(self):
         return [
             gym.spaces.Box(0, 255, (64, 64, 3), np.uint8),
-            gym.spaces.Box(-np.inf, np.inf, (3,), np.float64)
+            gym.spaces.Box(0, 255, (64, 64, 3), np.uint8),
+            gym.spaces.Box(-np.inf, np.inf, (3,), np.float64),
+            gym.spaces.Box(-np.inf, np.inf, (4,), np.float64),
+            gym.spaces.Box(-np.inf, np.inf, (2,), np.float64)
         ]
 
     # embodied.Space(np.uint8, self._env.observation_space.shape),\
